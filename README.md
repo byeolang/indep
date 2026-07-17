@@ -1,117 +1,69 @@
-# stela
-`stela` is a separate repository for the configuration / manifest layer used by the byeol project.
+# indep
 
-Although this repository is managed independently, its design, goals, and long-term direction are still closely tied to the overall byeol ecosystem.
+**indep** is a small collection of platform-independent utilities shared across the all core byeol projects.
 
----
+The project is designed to provide lightweight, reusable components with minimal dependencies. 
+It serves as a common foundation for multiple repositories while avoiding unnecessary coupling to higher-level modules.
 
-## Overview
+## Goals
 
-stela exists to separate and organize the parts of the byeol ecosystem that deal with:
+* Keep the implementation platform-independent whenever possible.
+* Minimize external dependencies.
+* Provide reusable building blocks for other projects.
+* Maintain a clean and stable API.
+* Focus on utility code rather than domain-specific logic.
 
-- configuration and manifest representation
- pack / toolchain / FFI-related metadata
-- parser / loader infrastructure for structured project metadata
-- independent maintenance of the configuration layer
+## Design Principles
 
-In other words, stela is not just a helper file format.  
-It is intended to be the structured configuration and manifest layer of the wider byeol ecosystem.
+### Independent
 
----
+The library should not depend on other byeol components unless absolutely necessary. It is intended to remain reusable in a wide variety of projects.
 
-## Current Status
+### Lightweight
 
-This repository is still in an early stage of separation.
+Only include functionality that is broadly useful. Features that are highly specialized belong in higher-level libraries instead.
 
-That means the following may continue to evolve:
+### Portable
 
-- syntax details
-- internal directory layout
-- build structure
-- public API and usage patterns
-- manifest and FFI-related specifications
+All code should compile across supported platforms without platform-specific assumptions. Platform-dependent implementations should be isolated behind well-defined interfaces.
 
-At this stage, it should be understood less as a fully standalone product and more as a repository extracted from the broader byeol project for better separation of concerns.
+### Maintainable
 
----
+Prefer simple implementations over clever ones. Long-term readability is valued more than micro-optimizations.
 
-## Important
+## Scope
 
-This repository does **not** currently contain the full background needed to understand every design decision in isolation.
+Typical contents of this library may include:
 
-For the broader context, you should refer to the main **byeol** repository, especially for:
+* Platform abstraction helpers
+* File system utilities
+* String utilities
+* Time and date utilities
+* Environment helpers
+* Common algorithms
+* Small reusable data structures
+* Miscellaneous helper functions
 
-- project philosophy
-- overall architecture
-- pack / manifest model
-- FFI direction
-- contribution workflow
-- shared build conventions
-- terminology and design rationale
+The exact contents may evolve over time as the byeol ecosystem grows.
 
-So while `stela` is now a separate repository, **the main conceptual and architectural context still lives in byeol**.
+## Relationship to Other Projects
 
----
+`indep` is one of the foundational libraries of the byeol ecosystem.
 
-## Recommended Reading Order
+Higher-level components may depend on **indep**, but **indep** should avoid depending on them. This one-way dependency helps keep the overall architecture clean and modular.
 
-If you are new to this repository, it is recommended that you read materials in roughly this order:
+## Development Guidelines
 
-1. High-level documentation in the main `byeol` repository
-2. `byeol` onboarding / architecture / contribution documents
-3. Then the code and documents in this repository
+When adding new functionality, consider the following questions:
 
-Starting from `stela` alone may make some of the design choices look arbitrary, when they are actually derived from the larger byeol direction.
+* Is this feature generally useful?
+* Can it be implemented without introducing heavy dependencies?
+* Does it belong in a lower-level utility library?
+* Will it remain platform-independent?
+* Does it improve the ecosystem as a whole rather than a single project?
 
----
+If the answer to most of these questions is **no**, the feature probably belongs in another module instead.
 
-## Build / Integration
+## License
 
-This repository is expected to follow the shared build conventions used across byeol-related projects.
-
-Depending on the stage of development, it may be used in one or more of the following ways:
-
-- built independently
-- included by a parent project through `FetchContent` or `add_subdirectory`
-- consumed indirectly through a larger toolchain or packaging flow
-
-More detailed build instructions may be added as the repository structure stabilizes.
-
----
-
-## Contributing
-
-Contributions are welcome, but large changes should be made with awareness of the wider byeol project direction.
-
-In particular, the following kinds of changes should be considered in the context of the main byeol repository as well:
-
-- syntax additions or changes
-- manifest schema changes
-- FFI-related representation changes
-- public interface changes
-- build or packaging policy changes
-
-In short: changes here may have implications outside this repository.
-
----
-
-## Why This Repository Exists
-
-This repository was split out in order to improve:
-
-- separation of responsibilities
-- clarity of project structure
-- potential for independent versioning
-- reuse across related repositories
-- maintainability over time
-
-That said, separation does not imply complete independence.  
-For now, the most accurate way to understand `stela` is as a focused repository within the larger byeol ecosystem.
-
----
-
-## Summary
-
-- `stela` is the configuration / manifest layer repository for the byeol ecosystem.
-- It is still in an early stage and parts of its structure and specification may change.
-- For the full design rationale and project context, you should also read the main **byeol** repository.
+This project is licensed under the same license as the byeol project.
