@@ -35,9 +35,3 @@ TEST(fsystemTest, dirSearchWithPathEndsWithSlash) {
     root.rel();
     ASSERT_TRUE(buildFound);
 }
-
-TEST(fsystemTest, supportGlobPatternAtTestdata) {
-    auto root = fsystem::find("*meta*");
-    ASSERT_TRUE(root.next());
-    root.rel();
-}

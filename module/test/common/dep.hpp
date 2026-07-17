@@ -2,4 +2,4 @@
 
 #include <gtest/gtest.h>
 
-#include "stela.hpp"
+#include "indep.hpp"
