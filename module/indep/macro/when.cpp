@@ -16,4 +16,4 @@ namespace by {
     void me::ret() const {}
 
     void me::crash() const { abort(); }
-}
+} // namespace by

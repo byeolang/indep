@@ -8,18 +8,20 @@
 //              BY_GET_VARG2_... are created for assuming varidic arguments
 //              are paired. for instance,
 //
-//                  MyMacro(int, value1, float, value2, char, value3, double, value4...)
+//                  MyMacro(int, value1, float, value2, char, value3, double,
+//                  value4...)
 //
-//              As you can see, even the macro can't distinguish whether those macro
-//              arguments are a set of two, macro developer's want to.
+//              As you can see, even the macro can't distinguish whether those
+//              macro arguments are a set of two, macro developer's want to.
 //              Might can be used in this situation.
 //
 //              usage:
-//                  VARG2 macro assumes that your macro's arguments were paired with
-//                  two arguments as one. like,
+//                  VARG2 macro assumes that your macro's arguments were paired
+//                  with two arguments as one. like,
 //
-//                      MyMacro(  int, value1,     float, value2,     char, value3...
-//                                X_1    Y_1        X_2    Y_2         X_3    Y_3
+//                      MyMacro(  int, value1,     float, value2,     char,
+//                      value3...
+//                                X_1    Y_1        X_2    Y_2         X_3 Y_3
 //                  so, at example above, BY_GET_VARG2_X_2 will be substitued
 //                  to 'float'.
 //

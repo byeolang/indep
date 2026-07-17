@@ -10,4 +10,4 @@ namespace by {
     }
 
     const std::string& me::getLevelName() const { return errLv::getName(getLv()); }
-}
+} // namespace by

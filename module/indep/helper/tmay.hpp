@@ -1,31 +1,31 @@
 /// @file
 #pragma once
 
+#include "indep/helper/tmedium.inl"
+#include "indep/helper/typeTrait.hpp"
 #include "indep/macro/byeolMeta.hpp"
 #include "indep/macro/declThis.hpp"
 #include "indep/macro/unconstFunc.hpp"
-#include "indep/helper/typeTrait.hpp"
-#include "indep/helper/tmedium.inl"
 #include <optional>
 
 namespace by {
 
     /** @ingroup indep
      *  @brief Optional value wrapper for error indication without exceptions
-     *  @details Provides a way to indicate errors in return-by-value functions without
-     *  using slow exceptions. Functionally almost identical to std::optional<T>, but with
-     *  API naming adapted to byeol project conventions.
+     *  @details Provides a way to indicate errors in return-by-value functions
+     * without using slow exceptions. Functionally almost identical to
+     * std::optional<T>, but with API naming adapted to byeol project conventions.
      *
-     *  For normal operation, pass the value as T& to the constructor. For error situations,
-     *  pass a tmedium class created as nullptr.
+     *  For normal operation, pass the value as T& to the constructor. For error
+     * situations, pass a tmedium class created as nullptr.
      *
      *  @remark Why use tmedium?
      *  See @ref tmedium for details on why this intermediate type is used.
      *
      *
      *  @remark Common naming conventions
-     *  The functions `has()`, `get()`, `rel()`, and `set()` follow naming conventions used
-     *  throughout the entire project.
+     *  The functions `has()`, `get()`, `rel()`, and `set()` follow naming
+     * conventions used throughout the entire project.
      *
      *  @section usage Usage
      *  Example of using tmay for error handling:
@@ -68,8 +68,8 @@ namespace by {
         nbool has() const;
         /**
          * @brief Gets the contained value.
-         * @warning Calling get() on an empty tmay instance results in undefined behavior.
-         *          It is recommended to check with has() before calling this.
+         * @warning Calling get() on an empty tmay instance results in undefined
+         * behavior. It is recommended to check with has() before calling this.
          * @return Pointer to the contained value.
          */
         T* get();

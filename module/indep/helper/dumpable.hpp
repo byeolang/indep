@@ -17,4 +17,4 @@ namespace by {
          */
         virtual void dump() const = 0;
     };
-}
+} // namespace by

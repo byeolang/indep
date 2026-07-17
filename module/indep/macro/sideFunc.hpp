@@ -11,8 +11,8 @@
 /** @ingroup indep
  *  @brief Side function macros for safe pointer operations
  *  @details Side Func is a term I coined.
- *  It refers to an overloaded function added for the convenience of the original function.
- *  For example:
+ *  It refers to an overloaded function added for the convenience of the
+ * original function. For example:
  *  @code
  *      void foo(std::string name, std::string value);
  *

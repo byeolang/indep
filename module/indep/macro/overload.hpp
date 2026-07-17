@@ -8,8 +8,8 @@
 
 /** @ingroup indep
  *  @brief Macro Overloding:
- *  @details by count of given arguments, let compiler determine which macro should works.
- *   original source code from BuvinJ at
+ *  @details by count of given arguments, let compiler determine which macro
+ * should works. original source code from BuvinJ at
  *   https://stackoverflow.com/questions/11761703/overloading-macro-on-number-of-arguments
  *
  *   usage:
@@ -21,7 +21,8 @@
  *       #define MyMacro(...) BY_OVERLOAD(MyMacro, __VA_ARGS__)
  *
  *       //  using:
- *       cout << MyMacro(5) << ", " << MyMacro(3, 5) << ", " << MyMacro() << "\n";
+ *       cout << MyMacro(5) << ", " << MyMacro(3, 5) << ", " << MyMacro() <<
+ * "\n";
  *   @endcode
  *
  *   expected output should be, 10, 8, 100.
@@ -33,15 +34,22 @@
 #define __OVERLOAD_HAS_NO_COMMA(...) _ARG16(__VA_ARGS__, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1)
 #define _TRIGGER_PARENTHESIS_(...) ,
 
-#define __OVERLOAD_HAS_ZERO_OR_ONE_ARG(...)                                                                         \
-    ___OVERLOAD_HAS_ZERO_OR_ONE_ARG(       /* test if there is just one argument, eventually an empty one           \
-                                            */                                                                      \
-        __OVERLOAD_HAS_COMMA(__VA_ARGS__), /* test if _TRIGGER_PARENTHESIS_ together with the                       \
-                                              argument adds a comma */                                              \
-        __OVERLOAD_HAS_COMMA(                                                                                       \
-            _TRIGGER_PARENTHESIS_ __VA_ARGS__), /* test if the argument together with a parenthesis adds a comma */ \
-        __OVERLOAD_HAS_COMMA(__VA_ARGS__(~)),   /* test if placing it between _TRIGGER_PARENTHESIS_                 \
-                                                   and the parenthesis adds a comma */                              \
+#define __OVERLOAD_HAS_ZERO_OR_ONE_ARG(...)                                                             \
+    ___OVERLOAD_HAS_ZERO_OR_ONE_ARG(                             /* test if there is just one argument, \
+                                                                  * eventually an empty one             \
+                                                                  */                                    \
+        __OVERLOAD_HAS_COMMA(__VA_ARGS__),                       /* test if                             \
+                                                                    _TRIGGER_PARENTHESIS_               \
+                                                                    together with the                   \
+                                                                    argument adds a comma               \
+                                                                  */                                    \
+        __OVERLOAD_HAS_COMMA(_TRIGGER_PARENTHESIS_ __VA_ARGS__), /* test if the                         \
+                                                                    argument together                   \
+                                                                    with a parenthesis                  \
+                                                                    adds a comma */                     \
+        __OVERLOAD_HAS_COMMA(__VA_ARGS__(~)),                    /* test if placing it between          \
+                                                                    _TRIGGER_PARENTHESIS_ and the       \
+                                                                    parenthesis adds a comma */         \
         __OVERLOAD_HAS_COMMA(_TRIGGER_PARENTHESIS_ __VA_ARGS__(~)))
 
 #define __OVERLOAD_PASTE5(_0, _1, _2, _3, _4) _0##_1##_2##_3##_4

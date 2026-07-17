@@ -7,13 +7,14 @@
 namespace by {
 
     /** @ingroup indep
-     *  @brief Deferred execution utility similar to defer keyword in other languages
-     *  @details Delays code execution until the end of the current scope. Similar to
-     *  the `defer` keyword found in languages like Go or Swift.
+     *  @brief Deferred execution utility similar to defer keyword in other
+     * languages
+     *  @details Delays code execution until the end of the current scope. Similar
+     * to the `defer` keyword found in languages like Go or Swift.
      *
-     *  In byeolang, end registers code to be executed when exiting the current function.
-     *  In C++, this is implemented using RAII and is limited to scope boundaries rather
-     *  than function boundaries.
+     *  In byeolang, end registers code to be executed when exiting the current
+     * function. In C++, this is implemented using RAII and is limited to scope
+     * boundaries rather than function boundaries.
      *
      *  @section usage Usage
      *  Use the provided macros for convenient deferred execution:
@@ -56,4 +57,4 @@ namespace by {
 #define BY_END_2(__class, stmt) auto BY_CONCAT(__defer__, __COUNTER__) = __class(stmt)
 #define BY_END_1(stmt) BY_END_2(end, ([&]() { stmt; }))
 #define BY_END(...) BY_OVERLOAD(BY_END, __VA_ARGS__)
-}
+} // namespace by

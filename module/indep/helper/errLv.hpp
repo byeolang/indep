@@ -27,4 +27,4 @@ namespace by {
          */
         static const std::string& getName(level lv);
     };
-}
+} // namespace by

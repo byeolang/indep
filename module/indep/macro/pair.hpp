@@ -9,9 +9,9 @@
  *      #define My_2(X, y) .......
  *  @endcode
  *
- *  But, if you put class template as macro argument, expanding macro gets messed up.
- *  My_2(template<int, float>, template<A, B>) // in fact, preprocessor thought we 
- *  passed 4 arguments, not 2.
+ *  But, if you put class template as macro argument, expanding macro gets
+ * messed up. My_2(template<int, float>, template<A, B>) // in fact,
+ * preprocessor thought we  passed 4 arguments, not 2.
  *
  *  Then, Use Funnel macro instead:
  *  @code

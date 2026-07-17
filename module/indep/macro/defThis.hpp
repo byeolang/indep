@@ -15,12 +15,13 @@
 
 /** @ingroup indep
  *  @brief byeolMeta macro's sub-commands, DEF_ME
- *  @details Similar to ME, this macro adds typedefs called `me` and `super` to the scope
- *  of the current compilation unit.
+ *  @details Similar to ME, this macro adds typedefs called `me` and `super` to
+ * the scope of the current compilation unit.
  *
  *  This macro was added for use when writing implementation files.
- *  Because the `ME` sub-command adds typedefs to the class scope, it's not available
- *  for you to access them outside of member fuctions when writing implementation file.
+ *  Because the `ME` sub-command adds typedefs to the class scope, it's not
+ * available for you to access them outside of member fuctions when writing
+ * implementation file.
  *
  *  let me give you example:
  *  @code
@@ -29,11 +30,14 @@
  *      BY(DEF_ME(Foo))
  *      // From now on, new typedef `me` refers To Foo type, and `super` refers
  *      // to Foo::super.
- *      // if there's no Foo::super, you'll have some compile errors when use it.
+ *      // if there's no Foo::super, you'll have some compile errors when use
+ * it.
  *
  *      me::Foo() {
- *          // if you didn't use DEF_ME above, `me::Foo() {` wouldn't be possible.
- *          // Instead, you should use `Foo::Foo() {` 'cause by the time use `me::`,
+ *          // if you didn't use DEF_ME above, `me::Foo() {` wouldn't be
+ * possible.
+ *          // Instead, you should use `Foo::Foo() {` 'cause by the time use
+ * `me::`,
  *          // it's not in a member funtion.
  *      }
  *  @endcode

@@ -1,15 +1,16 @@
 /// @file
 #pragma once
 
-#include <type_traits>
 #include "indep/common/typedef.hpp"
+#include <type_traits>
 
 namespace by {
 
     /** @ingroup indep
      *  @brief Type trait utilities for template metaprogramming
-     *  @details Provides type trait information and utilities for various types including
-     *  pointers, references, and void types. Includes null checking and default value generation.
+     *  @details Provides type trait information and utilities for various types
+     * including pointers, references, and void types. Includes null checking and
+     * default value generation.
      */
     template <typename T> struct typeTrait {
         typedef T Org;

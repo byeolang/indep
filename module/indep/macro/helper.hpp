@@ -21,7 +21,8 @@
 #define BY_CONCAT(x, y) _CONCAT(x, y)
 
 //    why delaying comma expression?:
-//        it can causes delimiter issue on expanding macros for template parameters.
+//        it can causes delimiter issue on expanding macros for template
+//        parameters.
 #define _COMMA() ,
 #define BY_COMMA() BY_DELAY(_COMMA)()
 #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)

@@ -29,12 +29,14 @@ namespace by {
 
     /** @ingroup indep
      *  @brief Platform-independent API wrapper for OS-specific operations
-     *  @details Provides a unified interface for platform-dependent operations, acting as a
-     *  buffer layer between platform-specific APIs and the rest of the codebase.
+     *  @details Provides a unified interface for platform-dependent operations,
+     * acting as a buffer layer between platform-specific APIs and the rest of the
+     * codebase.
      *
-     *  For example, colored text output requires different approaches on different platforms:
-     *  POSIX systems use ANSI escape sequences, while Windows uses WINAPI. Using
-     *  platformAPI::foreColor() allows writing platform-independent code.
+     *  For example, colored text output requires different approaches on different
+     * platforms: POSIX systems use ANSI escape sequences, while Windows uses
+     * WINAPI. Using platformAPI::foreColor() allows writing platform-independent
+     * code.
      *
      *  @section usage Usage
      *  Example of platform-independent colored console output:
@@ -53,15 +55,15 @@ namespace by {
     namespace platformAPI {
         /**
          * @brief Returns platform-specific string for console foreground color
-         * @return On POSIX returns ANSI escape sequence, on Windows modifies console and
-         *         returns empty string. Returns empty if terminal doesn't support colors.
+         * @return On POSIX returns ANSI escape sequence, on Windows modifies console
+         * and returns empty string. Returns empty if terminal doesn't support colors.
          */
         const _nout std::string& foreColor(consoleColor fore);
 
         /**
          * @brief Returns platform-specific string for console background color
-         * @return On POSIX returns ANSI escape sequence, on Windows modifies console and
-         *         returns empty string. Returns empty if terminal doesn't support colors.
+         * @return On POSIX returns ANSI escape sequence, on Windows modifies console
+         * and returns empty string. Returns empty if terminal doesn't support colors.
          */
         const _nout std::string& backColor(consoleColor back);
 
@@ -81,7 +83,8 @@ namespace by {
 
         /**
          * @brief Demangles C++ symbol name to human-readable form
-         * @return Demangled name on POSIX, original string on Windows/WASM or if demangling fails
+         * @return Demangled name on POSIX, original string on Windows/WASM or if
+         * demangling fails
          */
         _nout std::string demangle(const nchar* org);
 
@@ -100,7 +103,8 @@ namespace by {
 
         /**
          * @brief Executes shell command and captures output
-         * @return Complete stdout output. Returns empty on Windows or execution failure.
+         * @return Complete stdout output. Returns empty on Windows or execution
+         * failure.
          * @note POSIX only. Uses popen/pclose internally.
          */
         _nout std::string exec(const std::string& cmd);
@@ -141,8 +145,8 @@ namespace by {
         /**
          * @brief Enables unlimited core dump size for debugging
          * @return true if successfully set, false otherwise
-         * @note On POSIX sets RLIMIT_CORE to infinity, on Windows registers minidump filter.
-         *       Should be called early in debug builds.
+         * @note On POSIX sets RLIMIT_CORE to infinity, on Windows registers minidump
+         * filter. Should be called early in debug builds.
          */
         _nout nbool unlimitCoreDump();
     }; // namespace platformAPI

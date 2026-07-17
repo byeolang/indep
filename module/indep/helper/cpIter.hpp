@@ -8,33 +8,36 @@ namespace by {
     /** @ingroup indep
      *  @brief Codepoint-based string iterator
      *  @details Handles codepoint-based iteration for strings.
-     *  Primarily used in @ref nStr for traversing multibyte strings like UTF-8 Unicode.
+     *  Primarily used in @ref nStr for traversing multibyte strings like UTF-8
+     * Unicode.
      *
      *  Like typical iterators, it supports prefix/postfix increment operators,
      *  dereference operator, and bool conversion operator. When creating a cpIter,
-     *  you can specify the string to traverse along with the default iteration direction.
+     *  you can specify the string to traverse along with the default iteration
+     * direction.
      *
      *  @remark Direction and initial position
-     *  The direction specified during cpIter creation defines the iterator's default
-     *  direction and initial position. If you pass `reverse = true` as argument,
-     *  cpIter starts from the end of the string in reverse direction. However, if you
-     *  explicitly call stepBackward() or stepForward(), it will move in that direction
-     *  regardless of the default direction.
+     *  The direction specified during cpIter creation defines the iterator's
+     * default direction and initial position. If you pass `reverse = true` as
+     * argument, cpIter starts from the end of the string in reverse direction.
+     * However, if you explicitly call stepBackward() or stepForward(), it will move
+     * in that direction regardless of the default direction.
      *
      *
      *  @remark Past-the-end semantics
      *  Like STL, begin points to the first element, but end points to the position
-     *  after the last element (past-the-end). Therefore, when traversing in reverse,
-     *  you must call next() first.
+     *  after the last element (past-the-end). Therefore, when traversing in
+     * reverse, you must call next() first.
      *
      *  @section usage Usage
      *  Basic usage example:
      *  @code
-     *      std::string src = "abcd🏁efg"; // In UTF-8, 🏁 is represented by 3 characters
-     *      cpIter e4(src, true); // Define default iteration as reverse.
-     *                            // At this point, it points to past-the-end position
-     *      while(*e4 != "") // Currently at end position, so "" is returned
-     *          ++e4; // Same as calling e4.next(). Moves in default reverse direction
+     *      std::string src = "abcd🏁efg"; // In UTF-8, 🏁 is represented by 3
+     * characters cpIter e4(src, true); // Define default iteration as reverse.
+     *                            // At this point, it points to past-the-end
+     * position while(*e4 != "") // Currently at end position, so "" is returned
+     *          ++e4; // Same as calling e4.next(). Moves in default reverse
+     * direction
      *                // But this code never actually executes
      *      ASSERT_EQ(*e4, "");
      *
@@ -54,14 +57,16 @@ namespace by {
     public:
         /**
          * @brief Constructs iterator from pointer range
-         * @note Direction automatically determined: reverse if begin > from, forward otherwise
+         * @note Direction automatically determined: reverse if begin > from, forward
+         * otherwise
          */
         cpIter(const nchar* begin, const nchar* from);
 
         /**
          * @brief Constructs iterator from string reference
          * @param from String must outlive this iterator
-         * @param isReversed true for reverse iteration (starts at end), false for forward
+         * @param isReversed true for reverse iteration (starts at end), false for
+         * forward
          */
         explicit cpIter(const std::string& from, nbool isReversed = false);
 

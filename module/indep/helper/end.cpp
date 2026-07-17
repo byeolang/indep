@@ -6,4 +6,4 @@ namespace by {
     me::end(std::function<void(void)> l): _lambda(std::move(l)) {}
 
     me::~end() { _lambda(); }
-}
+} // namespace by

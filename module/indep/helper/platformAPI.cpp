@@ -3,16 +3,16 @@
 #include "indep/helper/typeTrait.hpp"
 #include <cstdarg>
 #if BY_BUILD_PLATFORM == BY_TYPE_WINDOWS
-#    include <windows.h>
 #    include <dbghelp.h>
+#    include <windows.h>
 #    pragma comment(lib, "dbghelp.lib")
 #    include <sstream>
 #elif BY_BUILD_PLATFORM == BY_TYPE_LINUX || BY_BUILD_PLATFORM == BY_TYPE_MACOS
 #    include <cxxabi.h>
 #    include <dlfcn.h> // for dladdr()
+#    include <sys/resource.h>
 #    include <sys/time.h>
 #    include <unistd.h>
-#    include <sys/resource.h>
 
 #    include <algorithm>
 #    include <iostream>
@@ -45,7 +45,7 @@ namespace by {
                 return find_if(samples.begin(), samples.end(),
                            [&](const string& e) { return var.find(e) != string::npos; }) != samples.end();
             }
-        }
+        } // namespace
 #endif
 
         const string& foreColor(consoleColor fore) {
@@ -89,10 +89,12 @@ namespace by {
             if(!is_terminal_supporting) return inner;
 
             static vector<string> backs = {
-                "\x1B[0;40m", "\x1B[0;44m", "\x1B[0;42m", "\x1B[0;46m", // black, blue, green, cyan
+                "\x1B[0;40m", "\x1B[0;44m", "\x1B[0;42m",
+                "\x1B[0;46m", // black, blue, green, cyan
                 "\x1B[0;41m", "\x1B[0;45m", "\x1B[0;43m",
-                "\x1B[0;47m",                                           // red, purple, yellow, white
-                "\x1B[1;40m", "\x1B[1;44m", "\x1B[1;42m", "\x1B[1;46m", // black, blue, green, cyan
+                "\x1B[0;47m", // red, purple, yellow, white
+                "\x1B[1;40m", "\x1B[1;44m", "\x1B[1;42m",
+                "\x1B[1;46m", // black, blue, green, cyan
                 "\x1B[1;41m", "\x1B[1;45m", "\x1B[1;43m",
                 "\x1B[1;47m", // red, purple, yellow, white
             };
@@ -296,7 +298,7 @@ namespace by {
                 CloseHandle(file);
                 return EXCEPTION_EXECUTE_HANDLER;
             }
-        }
+        } // namespace
 #endif
 
         nbool unlimitCoreDump() {

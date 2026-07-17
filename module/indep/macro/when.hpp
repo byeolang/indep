@@ -3,24 +3,25 @@
  */
 #pragma once
 
-#include <utility>
+#include "indep/common/typedef.hpp"
+#include "indep/def/_nout.hpp"
+#include "indep/helper/tmay.hpp"
+#include "indep/helper/typeTrait.hpp"
+#include "indep/macro/byeolMeta.hpp"
+#include "indep/macro/declThis.hpp"
 #include <cstdlib>
 #include <functional>
-#include "indep/def/_nout.hpp"
-#include "indep/common/typedef.hpp"
-#include "indep/helper/typeTrait.hpp"
-#include "indep/macro/declThis.hpp"
-#include "indep/macro/byeolMeta.hpp"
-#include "indep/helper/tmay.hpp"
+#include <utility>
 
 namespace by {
 
     /** @ingroup indep
      *  @brief Early-return pattern macro for exception handling
-     *  @details The byeol project actively applies the early-return pattern throughout.
-     *  This helps reduce code depth, improve code flow clarity, and handle exceptional
-     *  situations immediately. However, traditional `if` statements make it difficult
-     *  to distinguish between normal branching logic and early-return exception handling.
+     *  @details The byeol project actively applies the early-return pattern
+     * throughout. This helps reduce code depth, improve code flow clarity, and
+     * handle exceptional situations immediately. However, traditional `if`
+     * statements make it difficult to distinguish between normal branching logic
+     * and early-return exception handling.
      *
      *  @section problem Problem
      *  Consider this traditional early-return code:
@@ -43,10 +44,10 @@ namespace by {
      *      }
      *  @endcode
      *
-     *  The WHEN macro solves this by explicitly marking early-return cases. It is used
-     *  exclusively for early-return patterns. Additionally, since over 90% of early-returns
-     *  involve logging an error and returning an error value, WHEN supports chaining to
-     *  express both operations in a single line.
+     *  The WHEN macro solves this by explicitly marking early-return cases. It is
+     * used exclusively for early-return patterns. Additionally, since over 90% of
+     * early-returns involve logging an error and returning an error value, WHEN
+     * supports chaining to express both operations in a single line.
      *
      *  @section solution Solution
      *  The same code becomes much clearer with WHEN:
@@ -58,24 +59,24 @@ namespace by {
      *              .err("error: you tried to clone self generic object.")
      *              .ret(tstr<obj>());
      *
-     *          if(!_cache.count(key)) _makeGeneric(key, params::make(_paramNames, a));
-     *          return _cache[key];
+     *          if(!_cache.count(key)) _makeGeneric(key, params::make(_paramNames,
+     * a)); return _cache[key];
      *      }
      *  @endcode
      *
-     *  Now the purpose of each `if` is clear, and exception handling is visually distinct
-     *  from normal branching logic.
+     *  Now the purpose of each `if` is clear, and exception handling is visually
+     * distinct from normal branching logic.
      *
      *  @remark WHEN macro is used very frequently throughout the project, so it's
      *  important to understand it well.
      *
      *
      *  @remark __WHEN_OBJECT__ customization
-     *  Since byeol uses a multi-layered architecture, different layers may need different
-     *  behavior when WHEN conditions are met. Low-level layers simply output logs to the
-     *  screen, but high-level layers require more complex processing like creating exception
-     *  objects with stacktrace information. This is solved by redefining `__WHEN_OBJECT__`
-     *  in each layer.
+     *  Since byeol uses a multi-layered architecture, different layers may need
+     * different behavior when WHEN conditions are met. Low-level layers simply
+     * output logs to the screen, but high-level layers require more complex
+     * processing like creating exception objects with stacktrace information. This
+     * is solved by redefining `__WHEN_OBJECT__` in each layer.
      */
 
 #define __WHEN_OBJECT__ __indep_when__

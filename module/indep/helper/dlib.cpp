@@ -54,7 +54,7 @@ namespace by {
 #endif
         }
 
-    }
+    } // namespace
 
     tmay<std::string> me::load() {
 #ifdef BY_BUILD_PLATFORM_IS_WINDOWS

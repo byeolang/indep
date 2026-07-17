@@ -35,4 +35,4 @@ namespace by {
          */
         const std::string& getLevelName() const;
     };
-}
+} // namespace by

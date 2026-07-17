@@ -4,8 +4,8 @@
  */
 #pragma once
 
-#include "indep/def/common.hpp"
 #include "indep/common/dep.hpp"
+#include "indep/def/common.hpp"
 
 namespace by {
     typedef int nint;

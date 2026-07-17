@@ -16,4 +16,4 @@ namespace by {
     struct _nout Initiator {
         template <typename T> Initiator(T func) { func(); }
     };
-}
+} // namespace by

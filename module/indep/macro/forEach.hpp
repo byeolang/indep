@@ -55,8 +55,8 @@
 //    EACH macro for various parametered function:
 //        usage:
 //            #define X(x, y) cout << (x+y);
-//            BY_EACH_TUPLE(X, (1,2), (2,3)) // please be careful to wrap with a paranthesis each
-//            set of parameters.
+//            BY_EACH_TUPLE(X, (1,2), (2,3)) // please be careful to wrap with a
+//            paranthesis each set of parameters.
 //
 //        output:
 //            37
@@ -68,7 +68,8 @@
 //        usage:
 //            #define X(x, y) cout << (x+y);
 //            int b = 5;
-//            BY_EACH_EXPAND(X, b, 1,2,3) // ==> cout << (b+1); cout << (b+2); cout << (b+3);
+//            BY_EACH_EXPAND(X, b, 1,2,3) // ==> cout << (b+1); cout << (b+2);
+//            cout << (b+3);
 //
 //        output:
 //            678
@@ -76,8 +77,8 @@
 #define _BY_EACH_EXPAND1(f, s, x, peek, ...) f(s, x) _BY_EACH_NEXT(peek, _BY_EACH_EXPAND0)(f, s, peek, __VA_ARGS__)
 #define BY_EACH_EXPAND(f, ...) BY_EVAL(_BY_EACH_EXPAND1(f, s, __VA_ARGS__, ()()(), ()()(), ()()(), 0))
 
-//    Applies the function macro `f` to each of the remaining parameters and inserts commas between
-//    the results.
+//    Applies the function macro `f` to each of the remaining parameters and
+//    inserts commas between the results.
 #define _BY_EACH_LIST0(f, x, peek, ...) f(x) _BY_EACH_LIST_NEXT(peek, _BY_EACH_LIST1)(f, peek, __VA_ARGS__)
 #define _BY_EACH_LIST1(f, x, peek, ...) f(x) _BY_EACH_LIST_NEXT(peek, _BY_EACH_LIST0)(f, peek, __VA_ARGS__)
 #define BY_EACH_LIST(f, ...) BY_EVAL(_BY_EACH_LIST1(f, __VA_ARGS__, ()()(), ()()(), ()()(), 0))

@@ -11,8 +11,8 @@
  *  @details This reduces the possibility of macro conflicts between different
  *  libraries and makes macro writing easier.
  *  and this is generalized API used to describe the metadata of class in byeol.
- *  BY can be used to define detailed metadata about a class by chaining sub-command sets.
- *  these sub-commands are macros available only inside of BY.
+ *  BY can be used to define detailed metadata about a class by chaining
+ * sub-command sets. these sub-commands are macros available only inside of BY.
  *
  *  for instance,
  *  @code

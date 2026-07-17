@@ -22,4 +22,4 @@ namespace by {
         static std::string msg("?");
         return msg;
     }
-}
+} // namespace by
