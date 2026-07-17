@@ -3,8 +3,8 @@
 #include "indep/helper/typeTrait.hpp"
 #include <cstdarg>
 #if BY_BUILD_PLATFORM == BY_TYPE_WINDOWS
-#    include <dbghelp.h>
 #    include <windows.h>
+#    include <dbghelp.h>
 #    pragma comment(lib, "dbghelp.lib")
 #    include <sstream>
 #elif BY_BUILD_PLATFORM == BY_TYPE_LINUX || BY_BUILD_PLATFORM == BY_TYPE_MACOS
