@@ -1,0 +1,14 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.14)
+
+message("building ${CMAKE_CURRENT_SOURCE_DIR}...")
+
+#   In fact, this lists shows like REVERSED stack diagram.
+#   it depicts the exactly dependencies for which program should be come first.
+#   The faster, The lower on Stack diagram.
+add_subdirectory(indep)
+
+if(PROJECT_IS_TOP_LEVEL)
+    IF(NOT CMAKE_SYSTEM_NAME STREQUAL Windows)
+        add_subdirectory(test)
+    ENDIF(NOT CMAKE_SYSTEM_NAME STREQUAL Windows)
+ENDIF()
