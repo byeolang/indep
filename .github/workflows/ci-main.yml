@@ -76,24 +76,6 @@ jobs:
     - name: checkout repository codes
       uses: actions/checkout@v4
 
-    - name: cache Bison source
-      uses: actions/cache@v4
-      id: bison-source-cache
-      with:
-        path: bison-3.8.2.tar.gz
-        key: bison-source-3.8.2
-
-    - name: cache Bison binary
-      uses: actions/cache@v4
-      id: bison-binary-cache
-      with:
-        path: |
-          /usr/local/bin/bison
-          /usr/local/lib/liby.a
-          /usr/local/share/bison
-          /usr/local/share/man/man1/bison.1
-        key: ${{ runner.os }}-bison-binary-3.8.2
-
     - name: cache APT packages
       uses: actions/cache@v4
       with:
@@ -105,36 +87,11 @@ jobs:
     - name: install native dependencies
       run: |
         sudo apt-get update
-        sudo apt install -y python3 python3-pip cmake wget flex graphviz clang clang-format clang-tidy
-
-    - name: download Bison source
-      if: steps.bison-source-cache.outputs.cache-hit != 'true'
-      run: |
-        sudo wget http://ftp.gnu.org/gnu/bison/bison-3.8.2.tar.gz
-
-    - name: build and install Bison
-      if: steps.bison-binary-cache.outputs.cache-hit != 'true'
-      run: |
-        tar -zxvf bison-3.8.2.tar.gz
-        cd bison-3.8.2
-        ./configure
-        sudo make -j$(nproc)
-        sudo make install
-        cd ..
-        sudo rm -rf bison-3.8.2
-
-    - name: setup Bison symlink
-      run: |
-        if [ -f /usr/bin/bison ]; then
-          sudo mv /usr/bin/bison /usr/bin/bison-prev
-        fi
-        sudo ln -sf /usr/local/bin/bison /usr/bin/bison
-        bison --version
+        sudo apt install -y python3 python3-pip cmake wget graphviz clang clang-format clang-tidy
 
     - name: build in release mode & test current codes.
       run: |
         export C=clang CXX=clang++ PYTHON=$(which python3)
-        ls -l ${{github.workspace}}/module/stela/parser/bison
         cmake -S ${{github.workspace}}/build -B ${{github.workspace}}/out/build -DCMAKE_BUILD_TYPE=Release
         cmake --build ${{github.workspace}}/out/build --parallel
         $PYTHON ${{github.workspace}}/build/builder.py test
@@ -142,7 +99,7 @@ jobs:
     - name: upload library files
       uses: actions/upload-artifact@v4
       with:
-        name: stela-linux-x64
+        name: indep-linux-x64
         path: ${{github.workspace}}/bin/*.so
 
   build-on-macos:
@@ -168,51 +125,15 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-brew-
 
-    - name: cache Bison source
-      uses: actions/cache@v4
-      id: bison-source-cache
-      with:
-        path: bison-3.8.2.tar.gz
-        key: bison-source-3.8.2
-
-    - name: cache Bison binary
-      uses: actions/cache@v4
-      id: bison-binary-cache
-      with:
-        path: |
-          /usr/local/bin/bison
-          /usr/local/lib/liby.a
-          /usr/local/share/bison
-          /usr/local/share/man/man1/bison.1
-        key: ${{ runner.os }}-bison-binary-3.8.2
-
     - name: install native dependencies
       run: |
         brew unlink python && brew link --overwrite python
         brew uninstall --force cmake || true
-        brew install cmake wget bison flex graphviz
-
-    - name: download Bison source
-      if: steps.bison-source-cache.outputs.cache-hit != 'true'
-      run: |
-        echo "install bison"
-        sudo wget http://ftp.gnu.org/gnu/bison/bison-3.8.2.tar.gz
-
-    - name: build and install Bison
-      if: steps.bison-binary-cache.outputs.cache-hit != 'true'
-      run: |
-        tar -zxvf bison-3.8.2.tar.gz
-        cd bison-3.8.2
-        ./configure
-        sudo make -j$(sysctl -n hw.ncpu)
-        sudo make install
-        cd ..
+        brew install cmake wget graphviz
 
     - name: build in release mode & test current codes.
       run: |
-        export PATH="$PATH:/usr/local/opt/flex/bin:/usr/local/opt/bison/bin"
         export C=clang CXX=clang++ PYTHON=$(which python3)
-        ls -l ${{github.workspace}}/module/stela/parser/bison
         cmake -S ${{github.workspace}}/build -B ${{github.workspace}}/out/build -DCMAKE_BUILD_TYPE=Release
         cmake --build ${{github.workspace}}/out/build --parallel
         $PYTHON ${{github.workspace}}/build/builder.py test
@@ -220,7 +141,7 @@ jobs:
     - name: upload library files
       uses: actions/upload-artifact@v4
       with:
-        name: stela-macos-arm64
+        name: indep-macos-arm64
         path: ${{github.workspace}}/bin/*.dylib
 
   build-on-windows:
@@ -248,88 +169,14 @@ jobs:
       run: |
         choco install -y wget unzip 7zip
 
-    - name: cache FlexBison zip
-      uses: actions/cache@v4
-      with:
-        path: ${{ github.workspace }}\flex_bison\flex_bison.zip
-        key: ${{ runner.os }}-flexbison-2.5.25
-
-    - name: download FlexBison zip if not cached
-      run: |
-        if (-Not (Test-Path "${{ github.workspace }}\flex_bison\flex_bison.zip")) {
-          New-Item -ItemType Directory -Force -Path "${{ github.workspace }}\flex_bison"
-          Invoke-WebRequest -Uri "https://github.com/lexxmark/winflexbison/releases/download/v2.5.25/win_flex_bison-2.5.25.zip" -OutFile "${{ github.workspace }}\flex_bison\flex_bison.zip"
-        }
-      shell: pwsh
-
-    - name: unzip FlexBison
-      run: |
-        cd flex_bison
-        unzip flex_bison.zip
-        ren win_flex.exe flex.exe
-        ren win_bison.exe bison.exe
-
     - name: build in release mode
       shell: pwsh
       run: |
-        $env:PATH = "$env:PATH;${{github.workspace}}\flex_bison"
         cmake -S ${{github.workspace}}\build -B ${{github.workspace}}\out\build -G "Visual Studio 17 2022" -A x64
         cmake --build ${{github.workspace}}\out\build --config Release --parallel
 
     - name: upload library files
       uses: actions/upload-artifact@v4
       with:
-        name: stela-win-x64
+        name: indep-win-x64
         path: ${{github.workspace}}\bin\Release\*.dll
-
-  publish-doc:
-    needs: [checking-code-format, build-on-linux, build-on-macos, build-on-windows]
-    name: publish doc
-    runs-on: ubuntu-22.04
-
-    steps:
-      - name: checkout repository codes
-        uses: actions/checkout@v4
-
-      - name: cache Doxygen
-        uses: actions/cache@v4
-        id: doxygen-cache
-        with:
-          path: |
-            /usr/local/bin/doxygen
-            /usr/local/share/man/man1/doxygen.1
-          key: ${{ runner.os }}-doxygen-1.10.0
-
-      - name: cache pip packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-jinja2-pygments
-
-      - name: install native dependencies
-        run: |
-          sudo apt-get update
-          sudo apt install -y graphviz python3 python3-pip wget cmake flex bison default-jre
-
-      - name: install doxygen 1.10.0 from source
-        if: steps.doxygen-cache.outputs.cache-hit != 'true'
-        run: |
-          wget https://github.com/doxygen/doxygen/releases/download/Release_1_10_0/doxygen-1.10.0.src.tar.gz
-          tar -xzf doxygen-1.10.0.src.tar.gz
-          cd doxygen-1.10.0
-          cmake -DCMAKE_POLICY_VERSION_MINIMUM=3.5
-          sudo make -j$(nproc) install
-
-      - name: verify doxygen
-        run: doxygen --version
-
-      - name: install python dependencies
-        run: sudo python3 -m pip install --upgrade jinja2 Pygments
-
-      - name: commit docs if it's different to previous commit
-        env:
-          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
-        run: |
-          export PYTHON=$(which python3)
-          sudo $PYTHON ${{github.workspace}}/build/builder.py doc
-          sudo -E $PYTHON ${{github.workspace}}/build/builder.py pubdoc
