@@ -1,9 +1,11 @@
 #pragma once
 
 #include "indep/common.hpp"
-#include <vector>
+#include "indep/def.hpp"
+#include "indep/macro.hpp"
 #include <string>
-#ifdef BY_BUILD_PLATFORM == BY_TYPE_WINDOWS
+#include <vector>
+#ifdef BY_BUILD_PLATFORM_IS_WINDOWS
 #   include <windows.h>
 #else
 #   include <sys/wait.h>
@@ -12,22 +14,23 @@
 
 namespace by {
 
-    typedef std::vector<std::string>> execArgs;
+    typedef std::vector<std::string> execArgs;
+
     class _nout process {
         BY(ME(process))
 
+    public:
+        process() = default;
 
     public:
-        process(const std::string& execPath, const execArgs& args = execArgs());
-
-    public:
+        int create(const std::string& execPath, const execArgs& args = execArgs());
         int wait();
 
     private:
-#if BY_BUILD_PLATFORM == BY_TYPE_WINDOWS
+#ifdef BY_BUILD_PLATFORM_IS_WINDOWS
         PROCESS_INFORMATION _info{};
 #else
-        int _pid;
+        int _pid = 0;
 #endif
     };
 }
