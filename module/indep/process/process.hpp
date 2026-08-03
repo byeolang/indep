@@ -6,10 +6,10 @@
 #include <string>
 #include <vector>
 #ifdef BY_BUILD_PLATFORM_IS_WINDOWS
-#   include <windows.h>
+#    include <windows.h>
 #else
-#   include <sys/wait.h>
-#   include <unistd.h>
+#    include <sys/wait.h>
+#    include <unistd.h>
 #endif
 
 namespace by {
@@ -20,17 +20,17 @@ namespace by {
         BY(ME(process))
 
     public:
-        process() = default;
+        process();
 
     public:
-        int create(const std::string& execPath, const execArgs& args = execArgs());
-        int wait();
+        nbool create(const std::string& execPath, const execArgs& args = execArgs());
+        nint wait();
 
     private:
 #ifdef BY_BUILD_PLATFORM_IS_WINDOWS
-        PROCESS_INFORMATION _info{};
+        PROCESS_INFORMATION _info;
 #else
-        int _pid = 0;
+        nint _pid;
 #endif
     };
 }
