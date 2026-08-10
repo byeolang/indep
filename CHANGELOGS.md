@@ -2,6 +2,9 @@
 
 All notable changes to this repository will be documented in this file.
 
+## v0.1.1
++ add `process` to handle child process
+
 ## v0.1.0
 + Initial standalone `indep` repository.
 + Initial repository layout, build setup, and documentation.
