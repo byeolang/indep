@@ -35,3 +35,29 @@ TEST(fsystemTest, dirSearchWithPathEndsWithSlash) {
     root.rel();
     ASSERT_TRUE(buildFound);
 }
+
+TEST(fsystemTest, findAcceptsFilePathWithoutWildcard) {
+    // a bare file path used to open as a directory, which always failed and
+    // left the iterator empty. it now names that one file.
+    // find() still recurses, so subdirectories holding the same name keep
+    // showing up. the point here is that the named file is the first hit.
+    auto found = fsystem::find("../build/CMakeLists.txt");
+    ASSERT_TRUE(found.next());
+    ASSERT_EQ(found.getName(), "CMakeLists.txt");
+    ASSERT_EQ(*found, "../build/CMakeLists.txt");
+    found.rel();
+}
+
+TEST(fsystemTest, findOnMissingFileStaysEmpty) {
+    auto found = fsystem::find("../build/thereIsNoSuchFile.txt");
+    ASSERT_FALSE(found.next());
+    found.rel();
+}
+
+TEST(fsystemTest, findTreatsFileNameAsLiteralNotRegex) {
+    // '.' must not match any character, or a missing file would be reported
+    // as found whenever a similarly named one sits next to it.
+    auto found = fsystem::find("../build/CMakeListsGtxt");
+    ASSERT_FALSE(found.next());
+    found.rel();
+}

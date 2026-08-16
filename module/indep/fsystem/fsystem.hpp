@@ -40,6 +40,14 @@ namespace by {
      *  Empty folders are skipped during iteration.
      *
      *
+     *  @section existence Checking whether a path is there
+     *  A path naming one file works too, so an existence check is just an
+     *  iterator that is not empty.
+     *  @code
+     *      if(fsystem::find("your/path/config.stela").next())
+     *          doSomething();
+     *  @endcode
+     *
      *  @section this supports partial glob patterns
      *  You can use aterisk (*) and question mark (?) wildcards in the pattern.
      *  @code
@@ -76,7 +84,8 @@ namespace by {
 
         public:
             /**
-             * @param path this can be a glob pattern (supports * and ? wildcards)
+             * @param path a directory to walk, or a single file. this can be a
+             * glob pattern (supports * and ? wildcards)
              */
             iterator(const std::string& path);
             ~iterator();
@@ -107,7 +116,6 @@ namespace by {
             void _addDir(const std::string& dirPath);
             void _popDir();
             std::string _filterPath(const std::string& org);
-            nbool _isGlobPattern(const std::string& path);
             std::regex _convertToRegex(const std::string& globPattern);
 
         private:

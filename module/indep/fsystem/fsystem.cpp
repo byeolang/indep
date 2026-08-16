@@ -63,16 +63,20 @@ namespace by {
     using namespace std::filesystem;
 
     me::iterator::iterator(const std::string& newPath) {
+        // a directory is walked as a whole. anything else names one entry, so
+        // open its parent and let the pattern below keep just that name --
+        // opendir() on a file would fail and end the iterator right away.
+        if(is_directory(_filterPath(newPath))) {
+            _addDir(newPath);
+            return;
+        }
+
         path p(newPath);
         std::string fileName = p.filename().string();
+        _pattern.set(_convertToRegex(fileName));
 
-        if(!_isGlobPattern(fileName)) _addDir(newPath);
-        else {
-            _pattern.set(_convertToRegex(fileName));
-
-            std::string dir = p.parent_path().string();
-            _addDir(dir.empty() ? "." : dir);
-        }
+        std::string dir = p.parent_path().string();
+        _addDir(dir.empty() ? "." : dir);
     }
 
     me::iterator::~iterator() { rel(); }
@@ -140,6 +144,7 @@ namespace by {
     }
 
     std::string me::iterator::_filterPath(const std::string& org) {
+        if(org.empty()) return org;
         auto idx = org.length() - 1;
         char last = org[idx];
 #ifdef BY_BUILD_PLATFORM_IS_WINDOWS
@@ -152,8 +157,6 @@ namespace by {
         return org;
     }
 
-    nbool me::iterator::_isGlobPattern(const std::string& str) { return str.find_first_of("*?") != std::string::npos; }
-
     std::regex me::iterator::_convertToRegex(const std::string& globPattern) {
         std::string ret;
         ret.reserve(globPattern.length() * 2); // rough estimate
@@ -162,7 +165,20 @@ namespace by {
             switch(c) {
                 case '*': ret += ".*"; break;
                 case '?': ret += "."; break;
-                case '.': ret += "\\."; break;
+                // every other regex metacharacter is a literal here. plain file
+                // names reach this too, and they do carry '+', '(' and friends.
+                case '.':
+                case '\\':
+                case '^':
+                case '$':
+                case '+':
+                case '(':
+                case ')':
+                case '[':
+                case ']':
+                case '{':
+                case '}':
+                case '|': ret += '\\'; [[fallthrough]];
                 default: ret += c;
             }
         }
