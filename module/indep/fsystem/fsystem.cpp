@@ -70,8 +70,7 @@ namespace by {
         // inside its parent, so open the parent and let the pattern keep just
         // that name -- opendir() on a file would fail and end the iterator
         // right away.
-        if(!_isGlobPattern(fileName) && is_directory(_filterPath(newPath)))
-            _addDir(newPath);
+        if(!_isGlobPattern(fileName) && is_directory(_filterPath(newPath))) _addDir(newPath);
         else {
             _pattern.set(_convertToRegex(fileName));
 
@@ -158,9 +157,7 @@ namespace by {
         return org;
     }
 
-    nbool me::iterator::_isGlobPattern(const std::string& str) {
-        return str.find_first_of("*?") != std::string::npos;
-    }
+    nbool me::iterator::_isGlobPattern(const std::string& str) { return str.find_first_of("*?") != std::string::npos; }
 
     std::regex me::iterator::_convertToRegex(const std::string& globPattern) {
         std::string ret;
