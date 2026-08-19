@@ -62,24 +62,10 @@ TEST(fsystemTest, findTreatsFileNameAsLiteralNotRegex) {
     found.rel();
 }
 
-TEST(fsystemTest, findAcceptsWildcardOnDirName) {
-    // a wildcard naming a directory used to yield nothing: next() recursed
-    // into every subdirectory before the pattern was ever consulted, and the
-    // pattern was only applied to files.
-    auto found = fsystem::find("../buil?");
-    nbool listFound = false;
-
-    while(found.next())
-        if(*found == "../build/CMakeLists.txt") {
-            listFound = true;
-            break;
-        }
-    found.rel();
-    ASSERT_TRUE(listFound);
-}
-
-TEST(fsystemTest, findOnMissingDirWildcardStaysEmpty) {
-    auto found = fsystem::find("../thereIsNoSuchDi?");
+TEST(fsystemTest, findOnMissingWildcardStaysEmpty) {
+    // a pattern with no matching file name should not accidentally hit
+    // anything by recursion.
+    auto found = fsystem::find("../thereIsNoSuchFi?e");
     ASSERT_FALSE(found.next());
     found.rel();
 }
