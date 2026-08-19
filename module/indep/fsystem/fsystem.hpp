@@ -88,7 +88,10 @@ namespace by {
              * @param path a directory to walk, or a single file. this can be a
              * glob pattern (supports * and ? wildcards)
              */
+            iterator() = default;
             iterator(const std::filesystem::path& path);
+            iterator(const std::string& path) : iterator(std::filesystem::path(path)) {}
+            iterator(const nchar* path) : iterator(std::filesystem::path(path)) {}
             ~iterator();
 
         public:
@@ -132,6 +135,9 @@ namespace by {
          * files
          */
         static iterator find(const std::filesystem::path& path);
+        static iterator find(const std::string& path) { return find(std::filesystem::path(path)); }
+        static iterator find(const nchar* path) { return find(std::filesystem::path(path)); }
+        static iterator find(const std::string* it) BY_SIDE_FUNC(find);
 
         static std::filesystem::path getCurrentDir();
     };
