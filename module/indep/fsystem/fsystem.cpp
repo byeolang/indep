@@ -66,10 +66,6 @@ namespace by {
         path p(newPath);
         std::string fileName = p.filename().string();
 
-        // a plain directory is walked as a whole. anything else names one entry
-        // inside its parent, so open the parent and let the pattern keep just
-        // that name -- opendir() on a file would fail and end the iterator
-        // right away.
         if(!_isGlobPattern(fileName) && is_directory(_filterPath(newPath))) _addDir(newPath);
         else {
             _pattern.set(_convertToRegex(fileName));
