@@ -46,20 +46,11 @@ namespace by {
 #else
             if(file->d_type == DT_DIR) {
 #endif
-                // a directory matching the pattern is what the caller asked
-                // for, so walk all of it. otherwise keep looking inside.
-                // when already inside a match the mark stays where it is:
-                // moving it deeper would clear it on the way back up and hide
-                // the rest of the matched directory.
-                nbool isWanted = !_sub.has() && _isMatch(name);
-                ncnt depth = _entries.size();
                 _addDir(path);
-                // _addDir() gives up quietly on a directory it cannot open.
-                if(isWanted && _entries.size() > depth) _sub.set(_entries.size());
                 continue;
             }
 
-            if(!_isMatch(name)) continue;
+            if(_pattern.has() && !regex_match(name, *_pattern)) continue;
 
             _nowPath = path;
             return true;
@@ -129,13 +120,6 @@ namespace by {
 
     nbool me::iterator::isEnd() const { return _entries.size() == 0; }
 
-    nbool me::iterator::_isMatch(const std::string& name) const {
-        if(!_pattern.has()) return true;
-        // everything under a directory that matched is part of that match.
-        if(_sub.has()) return true;
-        return regex_match(name, *_pattern);
-    }
-
     void me::iterator::_addDir(const std::string& dirPath) {
         if(dirPath.empty()) return;
         std::string path = _filterPath(dirPath);
@@ -158,8 +142,6 @@ namespace by {
         closedir(e.dir);
 #endif
         _entries.pop_back();
-        // left the matched directory, so its subtree no longer counts.
-        if(_sub.has() && _entries.size() < *_sub) _sub.rel();
     }
 
     std::string me::iterator::_filterPath(const std::string& org) {

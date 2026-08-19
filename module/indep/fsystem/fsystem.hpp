@@ -118,15 +118,11 @@ namespace by {
             std::string _filterPath(const std::string& org);
             static nbool _isGlobPattern(const std::string& str);
             std::regex _convertToRegex(const std::string& globPattern);
-            nbool _isMatch(const std::string& name) const;
 
         private:
             entries _entries;
             std::string _nowPath;
             tmay<std::regex> _pattern;
-
-            // depth of the matched directory whose subtree we are inside.
-            tmay<ncnt> _sub;
         };
 
     public:
