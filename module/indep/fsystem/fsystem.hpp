@@ -4,6 +4,7 @@
 #include "indep/common.hpp"
 #include "indep/helper/tmay.inl"
 #include "indep/macro.hpp"
+#include <filesystem>
 #include <regex>
 #ifdef BY_BUILD_PLATFORM_IS_WINDOWS
 #    include <direct.h>
@@ -29,7 +30,7 @@ namespace by {
      *  @code
      *      auto e = fsystem::find("../your/path");
      *      while(e.next()) { // Returns false when all files are traversed
-     *          const std::string& path = *e; // Path of the found file
+     *          const std::filesystem::path& p = *e; // Path of the found file
      *          if(*e == "../your/path/child/helloWorld.cpp") // Always uses
      * relative paths doSomething(e->getDir()); // Returns the folder path of the
      * found file
@@ -53,7 +54,7 @@ namespace by {
      *  @code
      *      auto e = fsystem::find("*.cpp"); // the only difference is here
      *      while(e.next()) {
-     *          const std::string& path = *e;
+     *          const std::filesystem::path& p = *e;
      *          if(*e == "your/path/child/helloWorld.cpp")
      *              doSomething(e->getDir());
      *      }
@@ -69,7 +70,7 @@ namespace by {
 #else
             DIR* dir;
 #endif
-            std::string path;
+            std::filesystem::path path;
         };
 
         typedef std::vector<entry> entries;
@@ -87,14 +88,14 @@ namespace by {
              * @param path a directory to walk, or a single file. this can be a
              * glob pattern (supports * and ? wildcards)
              */
-            iterator(const std::string& path);
+            iterator(const std::filesystem::path& path);
             ~iterator();
 
         public:
-            const std::string& operator*();
+            const std::filesystem::path& operator*();
             me& operator++(int);
             operator nbool() const;
-            const std::string* operator->() const;
+            const std::filesystem::path* operator->() const;
 
         public:
             void rel();
@@ -107,21 +108,19 @@ namespace by {
              */
             nbool next();
 
-            const std::string& get() const;
-            std::string getName() const;
-            std::string getDir() const;
+            const std::filesystem::path& get() const;
+            std::filesystem::path getDir() const;
             nbool isEnd() const;
 
         private:
-            void _addDir(const std::string& dirPath);
+            void _addDir(const std::filesystem::path& dirPath);
             void _popDir();
-            std::string _filterPath(const std::string& org);
             static nbool _isGlobPattern(const std::string& str);
             std::regex _convertToRegex(const std::string& globPattern);
 
         private:
             entries _entries;
-            std::string _nowPath;
+            std::filesystem::path _nowPath;
             tmay<std::regex> _pattern;
         };
 
@@ -132,9 +131,8 @@ namespace by {
          * @note Automatically traverses subdirectories recursively, yielding only
          * files
          */
-        static iterator find(const std::string& path);
+        static iterator find(const std::filesystem::path& path);
 
-        static std::string getCurrentDir();
-        static const std::string& getDelimiter();
+        static std::filesystem::path getCurrentDir();
     };
 } // namespace by

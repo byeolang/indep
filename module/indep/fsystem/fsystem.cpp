@@ -1,22 +1,14 @@
 #include "indep/fsystem/fsystem.hpp"
 #include "indep/helper/typeTrait.hpp"
 #include "indep/macro/when.hpp"
-#include <filesystem>
 
 namespace by {
 
     BY_DEF_ME(fsystem)
 
-    const std::string& me::iterator::get() const { return _nowPath; }
+    using namespace std::filesystem;
 
-    const std::string& me::getDelimiter() {
-#if BY_BUILD_PLATFORM == BY_TYPE_WINDOWS
-        static std::string inner = "\\";
-#else
-        static std::string inner = "/";
-#endif
-        return inner;
-    }
+    const path& me::iterator::get() const { return _nowPath; }
 
     nbool me::iterator::next() {
         // assume that all of data to _entries was valid:
@@ -40,44 +32,41 @@ namespace by {
             std::string name = file->d_name;
 #endif
             if(name == ".." || name == ".") continue;
-            std::string path = e.path + getDelimiter() + name;
+            path child = e.path / name;
 #ifdef BY_BUILD_PLATFORM_IS_WINDOWS
             if(e.file.attrib & _A_SUBDIR) {
 #else
             if(file->d_type == DT_DIR) {
 #endif
-                _addDir(path);
+                _addDir(child);
                 continue;
             }
 
             if(_pattern.has() && !regex_match(name, *_pattern)) continue;
 
-            _nowPath = path;
+            _nowPath = child;
             return true;
         }
 
-        _nowPath = "";
+        _nowPath.clear();
         return false;
     }
 
-    using namespace std::filesystem;
+    me::iterator::iterator(const path& newPath) {
+        std::string fileName = newPath.filename().string();
 
-    me::iterator::iterator(const std::string& newPath) {
-        path p(newPath);
-        std::string fileName = p.filename().string();
-
-        if(!_isGlobPattern(fileName) && is_directory(_filterPath(newPath))) _addDir(newPath);
+        if(!_isGlobPattern(fileName) && is_directory(newPath)) _addDir(newPath);
         else {
             _pattern.set(_convertToRegex(fileName));
 
-            std::string dir = p.parent_path().string();
-            _addDir(dir.empty() ? "." : dir);
+            path dir = newPath.parent_path();
+            _addDir(dir.empty() ? path(".") : dir);
         }
     }
 
     me::iterator::~iterator() { rel(); }
 
-    const std::string& me::iterator::operator*() { return get(); }
+    const path& me::iterator::operator*() { return get(); }
 
     me::iterator& me::iterator::operator++(int) {
         next();
@@ -86,46 +75,27 @@ namespace by {
 
     me::iterator::operator nbool() const { return !isEnd(); }
 
-    const std::string* me::iterator::operator->() const { return &get(); }
+    const path* me::iterator::operator->() const { return &get(); }
 
     void me::iterator::rel() {
         while(!isEnd())
             _popDir();
     }
 
-    std::string me::iterator::getName() const {
-        const std::string& path = get();
-#if BY_BUILD_PLATFORM == BY_TYPE_WINDOWS
-        auto slash = path.rfind('\\');
-#else
-        auto slash = path.rfind('/');
-#endif
-        return path.substr(slash + 1);
-    }
-
-    std::string me::iterator::getDir() const {
-        const std::string& path = get();
-#if BY_BUILD_PLATFORM == BY_TYPE_WINDOWS
-        auto slash = path.rfind('\\');
-#else
-        auto slash = path.rfind('/');
-#endif
-        return path.substr(0, slash);
-    }
+    path me::iterator::getDir() const { return get().parent_path(); }
 
     nbool me::iterator::isEnd() const { return _entries.size() == 0; }
 
-    void me::iterator::_addDir(const std::string& dirPath) {
+    void me::iterator::_addDir(const path& dirPath) {
         if(dirPath.empty()) return;
-        std::string path = _filterPath(dirPath);
 #ifdef BY_BUILD_PLATFORM_IS_WINDOWS
         _finddata_t file;
-        intptr_t newDir = _findfirst((path + "\\*.*").c_str(), &file);
+        intptr_t newDir = _findfirst((dirPath / "*.*").string().c_str(), &file);
         if(newDir == -1) return;
-        _entries.push_back(entry{file, newDir, path});
+        _entries.push_back(entry{file, newDir, dirPath});
 #else
-        DIR& newDir = opendir(path.c_str()) OR.ret();
-        _entries.push_back(entry{&newDir, path});
+        DIR& newDir = opendir(dirPath.string().c_str()) OR.ret();
+        _entries.push_back(entry{&newDir, dirPath});
 #endif
     }
 
@@ -137,20 +107,6 @@ namespace by {
         closedir(e.dir);
 #endif
         _entries.pop_back();
-    }
-
-    std::string me::iterator::_filterPath(const std::string& org) {
-        if(org.empty()) return org;
-        auto idx = org.length() - 1;
-        char last = org[idx];
-#ifdef BY_BUILD_PLATFORM_IS_WINDOWS
-        if(last == '\\' || last == '/')
-#else
-        if(last == '/')
-#endif
-            return org.substr(0, idx);
-
-        return org;
     }
 
     nbool me::iterator::_isGlobPattern(const std::string& str) { return str.find_first_of("*?") != std::string::npos; }
@@ -184,11 +140,11 @@ namespace by {
         return std::regex(ret, std::regex::icase);
     }
 
-    me::iterator me::find(const std::string& path) { return iterator(path); }
+    me::iterator me::find(const path& newPath) { return iterator(newPath); }
 
-    std::string me::getCurrentDir() {
+    path me::getCurrentDir() {
         constexpr ncnt BUF_LEN = 256;
         char buf[BUF_LEN] = {};
-        return getcwd(buf, BUF_LEN);
+        return path(getcwd(buf, BUF_LEN));
     }
 } // namespace by
