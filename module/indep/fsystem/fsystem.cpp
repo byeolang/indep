@@ -72,20 +72,21 @@ namespace by {
     using namespace std::filesystem;
 
     me::iterator::iterator(const std::string& newPath) {
-        // a directory is walked as a whole. anything else names one entry, so
-        // open its parent and let the pattern below keep just that name --
-        // opendir() on a file would fail and end the iterator right away.
-        if(is_directory(_filterPath(newPath))) {
-            _addDir(newPath);
-            return;
-        }
-
         path p(newPath);
         std::string fileName = p.filename().string();
-        _pattern.set(_convertToRegex(fileName));
 
-        std::string dir = p.parent_path().string();
-        _addDir(dir.empty() ? "." : dir);
+        // a plain directory is walked as a whole. anything else names one entry
+        // inside its parent, so open the parent and let the pattern keep just
+        // that name -- opendir() on a file would fail and end the iterator
+        // right away.
+        if(!_isGlobPattern(fileName) && is_directory(_filterPath(newPath)))
+            _addDir(newPath);
+        else {
+            _pattern.set(_convertToRegex(fileName));
+
+            std::string dir = p.parent_path().string();
+            _addDir(dir.empty() ? "." : dir);
+        }
     }
 
     me::iterator::~iterator() { rel(); }
@@ -173,6 +174,10 @@ namespace by {
             return org.substr(0, idx);
 
         return org;
+    }
+
+    nbool me::iterator::_isGlobPattern(const std::string& str) {
+        return str.find_first_of("*?") != std::string::npos;
     }
 
     std::regex me::iterator::_convertToRegex(const std::string& globPattern) {
