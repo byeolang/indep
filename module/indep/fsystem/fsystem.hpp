@@ -90,8 +90,8 @@ namespace by {
              */
             iterator() = default;
             iterator(const std::filesystem::path& path);
-            iterator(const std::string& path) : iterator(std::filesystem::path(path)) {}
-            iterator(const nchar* path) : iterator(std::filesystem::path(path)) {}
+            iterator(const std::string& path);
+            iterator(const nchar* path);
             ~iterator();
 
         public:
@@ -118,8 +118,8 @@ namespace by {
         private:
             void _addDir(const std::filesystem::path& dirPath);
             void _popDir();
-            static nbool _isGlobPattern(const std::string& str);
-            std::regex _convertToRegex(const std::string& globPattern);
+            static nbool _isGlobPattern(const std::filesystem::path& p);
+            std::regex _convertToRegex(const std::filesystem::path& globPattern);
 
         private:
             entries _entries;
@@ -135,9 +135,8 @@ namespace by {
          * files
          */
         static iterator find(const std::filesystem::path& path);
-        static iterator find(const std::string& path) { return find(std::filesystem::path(path)); }
-        static iterator find(const nchar* path) { return find(std::filesystem::path(path)); }
-        static iterator find(const std::string* it) BY_SIDE_FUNC(find);
+        static iterator find(const std::string& path) BY_SIDE_FUNC(true, find(std::filesystem::path(path)), iterator());
+        static iterator find(const nchar* it) BY_SIDE_FUNC(it, find(std::filesystem::path(it)), iterator());
 
         static std::filesystem::path getCurrentDir();
     };

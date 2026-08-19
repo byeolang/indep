@@ -53,7 +53,7 @@ namespace by {
     }
 
     me::iterator::iterator(const path& newPath) {
-        std::string fileName = newPath.filename().string();
+        path fileName = newPath.filename();
 
         if(!_isGlobPattern(fileName) && is_directory(newPath)) _addDir(newPath);
         else {
@@ -63,6 +63,10 @@ namespace by {
             _addDir(dir.empty() ? path(".") : dir);
         }
     }
+
+    me::iterator::iterator(const std::string& newPath): iterator(path(newPath)) {}
+
+    me::iterator::iterator(const nchar* newPath): iterator(path(newPath)) {}
 
     me::iterator::~iterator() { rel(); }
 
@@ -109,13 +113,14 @@ namespace by {
         _entries.pop_back();
     }
 
-    nbool me::iterator::_isGlobPattern(const std::string& str) { return str.find_first_of("*?") != std::string::npos; }
+    nbool me::iterator::_isGlobPattern(const path& p) { return p.string().find_first_of("*?") != std::string::npos; }
 
-    std::regex me::iterator::_convertToRegex(const std::string& globPattern) {
+    std::regex me::iterator::_convertToRegex(const path& globPattern) {
+        std::string src = globPattern.string();
         std::string ret;
-        ret.reserve(globPattern.length() * 2); // rough estimate
+        ret.reserve(src.length() * 2); // rough estimate
 
-        for(char c: globPattern) {
+        for(char c: src) {
             switch(c) {
                 case '*': ret += ".*"; break;
                 case '?': ret += "."; break;
