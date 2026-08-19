@@ -11,8 +11,9 @@ TEST(fsystemTest, recursiveDirSearchAtBin) {
     while(root.next()) {
         if(*root == "../build/CMakeLists.txt") {
             buildFound = true;
-            ASSERT_EQ(root.getName(), "CMakeLists.txt");
+            ASSERT_EQ(root->filename(), "CMakeLists.txt");
             ASSERT_EQ(root.getDir(), "../build");
+            ASSERT_EQ(root.getDir().filename(), "build");
             break;
         }
     }
@@ -27,7 +28,7 @@ TEST(fsystemTest, dirSearchWithPathEndsWithSlash) {
     while(root.next()) {
         if(*root == "../build/CMakeLists.txt") {
             buildFound = true;
-            ASSERT_EQ(root.getName(), "CMakeLists.txt");
+            ASSERT_EQ(root->filename(), "CMakeLists.txt");
             ASSERT_EQ(root.getDir(), "../build");
             break;
         }
@@ -43,7 +44,7 @@ TEST(fsystemTest, findAcceptsFilePathWithoutWildcard) {
     // showing up. the point here is that the named file is the first hit.
     auto found = fsystem::find("../build/CMakeLists.txt");
     ASSERT_TRUE(found.next());
-    ASSERT_EQ(found.getName(), "CMakeLists.txt");
+    ASSERT_EQ(found->filename(), "CMakeLists.txt");
     ASSERT_EQ(*found, "../build/CMakeLists.txt");
     found.rel();
 }
