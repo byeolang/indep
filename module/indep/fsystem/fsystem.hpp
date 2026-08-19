@@ -116,6 +116,7 @@ namespace by {
             void _addDir(const std::string& dirPath);
             void _popDir();
             std::string _filterPath(const std::string& org);
+            static nbool _isGlobPattern(const std::string& str);
             std::regex _convertToRegex(const std::string& globPattern);
             nbool _isMatch(const std::string& name) const;
 
