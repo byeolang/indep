@@ -9,6 +9,7 @@
 #include "indep/helper/errorable.hpp"
 #include "indep/helper/line.hpp"
 #include "indep/helper/platformAPI.hpp"
+#include "indep/helper/smap.inl"
 #include "indep/helper/tmedium.inl"
 #include "indep/helper/tres.inl"
 #include "indep/helper/typeTrait.hpp"
