@@ -33,8 +33,8 @@ namespace by {
      * enums for categorized error handling.
      */
     template <typename T, typename R> class tres: public tmay<T> {
-        typedef tres<T, R> __me__;
-        BY(ME(__me__, tmay<T>))
+        typedef tres<T, R> __me;
+        BY(ME(__me, tmay<T>))
 
     public:
         tres() = default;
